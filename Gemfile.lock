@@ -381,6 +381,7 @@ GEM
       loofah (~> 2.3)
     rainbow (3.0.0)
     rake (13.0.1)
+    raygun-apm (1.0.40-universal-darwin)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -579,6 +580,7 @@ DEPENDENCIES
   rack-cache (~> 1.2)
   rails!
   rake (>= 11.1)
+  raygun-apm
   redcarpet (~> 3.2.3)
   redis (~> 4.0)
   redis-namespace

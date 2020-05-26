@@ -159,5 +159,26 @@ module ActiveSupport
     alias :assert_not_same :refute_same
 
     ActiveSupport.run_load_hooks(:active_support_test_case, self)
+
+    require 'raygun/apm'
+    include ActiveSupport::Testing::SetupAndTeardown
+
+    def finalize_tracer(tracer)
+      proc { tracer.process_ended }
+    end
+
+    setup do
+      @_raygun_tracer ||= begin
+        tracer = Raygun::Apm::Tracer.new
+        tracer.udp_sink!
+        ObjectSpace.define_finalizer(tracer, finalize_tracer(tracer))
+        tracer
+      end
+      @_raygun_tracer.start_trace
+    end
+
+    teardown do
+      @_raygun_tracer.end_trace
+    end
   end
 end

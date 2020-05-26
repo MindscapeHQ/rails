@@ -112,6 +112,7 @@ group :test do
   platforms :mri do
     gem "stackprof"
     gem "byebug"
+    gem "raygun-apm"
   end
 
   gem "benchmark-ips", "< 2.8"
