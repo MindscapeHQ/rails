@@ -168,17 +168,21 @@ module ActiveSupport
     end
 
     setup do
-      @_raygun_tracer ||= begin
-        tracer = Raygun::Apm::Tracer.new
-        tracer.udp_sink!
-        ObjectSpace.define_finalizer(tracer, finalize_tracer(tracer))
-        tracer
-      end
+      @_raygun_tracer ||= Raygun::Apm::Tracer.instance || initialize_raygun_tracer
       @_raygun_tracer.start_trace
     end
 
     teardown do
-      @_raygun_tracer.end_trace
+      @_raygun_tracer.end_trace if @_raygun_tracer
+    end
+
+    private
+    def initialize_raygun_tracer
+      tracer = Raygun::Apm::Tracer.new
+      tracer.udp_sink!
+      ObjectSpace.define_finalizer(tracer, finalize_tracer(tracer))
+      Raygun::Apm::Tracer.instance = tracer
+      tracer
     end
   end
 end
